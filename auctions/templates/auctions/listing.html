@@ -1,0 +1,85 @@
+{% extends "auctions/layout.html" %}
+{% load static %} 
+{% load bootstrap4 %}
+{% block body %}
+<h2>Active Listing</h2>
+
+
+
+
+<hr>
+
+
+<h2 style="text-align: center;">Listing: {{listing.listing_title}}</h2>
+
+
+
+
+</li>
+
+
+
+
+<img style="display: flex;" width=300px; height:300px; src="{{listing.imageURL}}" alt="My image">
+<strong style="text-align: center;"><p>Price: ${{listing.listing_price}}</p><strong>
+<form action="{% url 'listing' listing.id %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    {% endbuttons %}
+</form>
+
+
+<p>{{no_of_bids}} bids made so far</p>
+<hr>
+<br>
+<h3>Details:</h3>
+<strong style="text-align: center;"><p>Listed by: {{listing.listing_owner}}</p><strong>
+<strong style="text-align: center;"><p>Category: {{listing.listing_category}}</p><strong>
+<br>
+<br>
+<hr>
+
+<h2 style="text-decoration:underline;"> Comment Section</h2>
+{%if len == 0 %}
+
+  <p>Post a Comment, No Comments</p>
+
+{%  endif %}
+   
+
+
+  {% for comment  in comments %}
+   
+     <p> 
+       {{comment}}
+    
+     </p>
+  
+  
+{% endfor %}
+
+{% if j %}
+
+   <p>Delete</p>
+
+{% endif %}
+
+
+     
+     
+
+   
+     
+
+     
+     
+    
+
+    
+   
+   
+   
+
+{% endblock %}

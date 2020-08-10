@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %} 
+
+{% load static %}
+{% block body %}
+<h2>Active Categories</h2>
+<br>
+
+
+
+{% for item in listing %}
+
+
+<hr>
+
+<a href="{% url 'listing' item.id%}">
+    <h2 style="text-align: center;">{{item.listing_title}}</h2>
+</a>
+
+</li>
+<img style="display: flex; width=300px; height:300px;" src="{{item.imageURL}}" alt="My image">
+<strong style="text-align: center;"><p>Price: ${{item.listing_price}}</p><strong>
+<p style="text-align:center;">created at :{{item.created_at}}</p>
+<hr>
+<br>
+
+     
+  
+{% endfor %}
+{% endblock %}
+
+
+
+

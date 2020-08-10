@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+{% load bootstrap4 %}
+{% block body %}
+
+
+<form action="{% url 'create_listing' %}" method="post" class="form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    {% endbuttons %}
+</form>
+
+
+{% endblock %}
