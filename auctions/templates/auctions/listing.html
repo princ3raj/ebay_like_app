@@ -11,6 +11,29 @@
 
 
 <h2 style="text-align: center;">Listing: {{listing.listing_title}}</h2>
+{% if key == 1 %}
+<form action="{% url 'listing' listing.id %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form watchlistform %}
+    {% buttons %}
+        <button name="watchlistbutton" type="submit" class="btn btn-secondary">Remove</button>
+    {% endbuttons %}
+    <br>
+    <br>
+</form>
+{% else %}
+<form action="{% url 'listing' listing.id %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form watchlistform %}
+    {% buttons %}
+        <button name="watchlistbutton" type="submit" class="btn btn-dark">Add to watchlist</button>
+    {% endbuttons %}
+    <br>
+    <br>
+</form>
+{% endif %}
+
+
 
 
 
@@ -24,9 +47,9 @@
 <strong style="text-align: center;"><p>Price: ${{listing.listing_price}}</p><strong>
 <form action="{% url 'listing' listing.id %}" method="post" class="form">
     {% csrf_token %}
-    {% bootstrap_form form %}
+    {{form.as_p}}
     {% buttons %}
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button  name="bid" type="submit" class="btn btn-primary">Submit</button>
     {% endbuttons %}
 </form>
 
@@ -47,10 +70,8 @@
   <p>Post a Comment, No Comments</p>
 
 {%  endif %}
-   
 
-
-  {% for comment  in comments %}
+{% for comment  in comments %}
    
      <p> 
        {{comment}}
@@ -59,6 +80,22 @@
   
   
 {% endfor %}
+
+<br>
+<br>
+
+
+<form action="{% url 'listing' listing.id %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form commentForm %}
+    {% buttons %}
+        <button name="comment" type="submit" class="btn btn-primary">Submit</button>
+    {% endbuttons %}
+</form>
+   
+
+
+  
 
 {% if j %}
 

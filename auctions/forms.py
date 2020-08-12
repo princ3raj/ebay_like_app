@@ -1,6 +1,6 @@
 from django import forms  
 
-from .models import Listings,Bid
+from .models import Listings,Bid, WatchList, Comments
 
 
 class ListingForm(forms.ModelForm):
@@ -13,3 +13,16 @@ class BidForm(forms.ModelForm):
     class Meta:
         model=Bid
         fields=['bid_price']
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model=Comments
+        fields=['comments']
+
+
+class WatchListForm(forms.ModelForm):
+    class Meta:
+        model=WatchList
+        fields=['watchlist_listing','watchlist_owner']
+        exclude=['watchlist_listing','watchlist_owner']

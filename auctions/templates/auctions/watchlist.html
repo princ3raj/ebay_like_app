@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %} {% load static %} {% load bootstrap4 %} {% block body %}
+<h2>Watch List</h2>
+
+{% for listing in listings %}
+
+
+<hr>
+
+<a href="{% url 'listing' listing.id%}">
+    <h2 style="text-align: center;">{{listing.listing_title}}</h2>
+</a>
+
+
+
+
+</li>
+
+<img style="display: flex; width=300px; height:300px;" src="{{listing.imageURL}}" alt="My image">
+<strong style="text-align: center;"><p>Price: ${{listing.listing_price}}</p><strong>
+<p style="text-align:center;">created at :{{listing.created_at}}</p>
+
+<hr>
+<br>
+
+     
+  
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
