@@ -47,7 +47,9 @@
 <strong style="text-align: center;"><p>Price: ${{listing.listing_price}}</p><strong>
 <form action="{% url 'listing' listing.id %}" method="post" class="form">
     {% csrf_token %}
-    {{form.as_p}}
+   {% for field in form %}
+    {% bootstrap_field field %}
+   {% endfor %}
     {% buttons %}
         <button  name="bid" type="submit" class="btn btn-primary">Submit</button>
     {% endbuttons %}
@@ -55,6 +57,12 @@
 
 
 <p>{{no_of_bids}} bids made so far</p>
+{% if flag == True %}
+  <p>{{highestbid}} is the highest bid until now!</p>
+{% else %}
+ 
+{% endif %}
+
 <hr>
 <br>
 <h3>Details:</h3>

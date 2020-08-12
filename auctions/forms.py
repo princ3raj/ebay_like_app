@@ -3,6 +3,8 @@ from django import forms
 from .models import Listings,Bid, WatchList, Comments
 
 
+
+
 class ListingForm(forms.ModelForm):
     class Meta:
         model=Listings
@@ -10,9 +12,24 @@ class ListingForm(forms.ModelForm):
 
 
 class BidForm(forms.ModelForm):
+
+
     class Meta:
         model=Bid
-        fields=['bid_price']
+        fields=['bidstart']
+
+    # def clean_bidstart(self,*args,**kwargs):
+    #     bidstart=self.cleaned_data.get("bidstart")
+    #     if bidstart < 67 or bidstart==67:
+    #         raise forms.ValidationError("Value is to small")
+    #     return bidstart
+
+ 
+       
+
+        
+
+    
 
 
 class CommentForm(forms.ModelForm):
@@ -26,3 +43,17 @@ class WatchListForm(forms.ModelForm):
         model=WatchList
         fields=['watchlist_listing','watchlist_owner']
         exclude=['watchlist_listing','watchlist_owner']
+
+
+# #Bidding Value cheking
+# def BidValueChecking():
+        # BidItems=Bid.objects.all()
+        # biditems=[]
+        # for bidone in BidItems:
+        #     if  str(bidone.bidding)==listing.listing_title:
+        #         bid_item=bidone
+        #         biditems.append(bid_item)
+
+        # bidlen=len(biditems)-1
+
+        

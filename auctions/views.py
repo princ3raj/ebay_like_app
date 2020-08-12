@@ -102,11 +102,32 @@ def listing(request,item_id):
         j=0
 
     print(listing.listing_title)
+    # #calling function to pass value
+    # ListingItemIdRetriever(item_id)
+
+    BidItems=Bid.objects.all()
+    biditems=[]
+
+    for bidone in BidItems:
+            if  str(bidone.bidding)==listing.listing_title:
+                bid_item=bidone
+                biditems.append(bid_item)
+
+    bidlen=len(biditems)-1
+    if bidlen ==-1:
+        HighestBidMade=0
+        flag=False
+    else:
+        HighestBidMade=biditems[bidlen].bidstart
+        flag=True
+
+   
+
+    
    
 
     comments=Comments.objects.all()
     comment_all=[]
-    print(type(str(comments[0].listing_comment)))
     for comment in comments:
         if str(comment.listing_comment)==listing.listing_title:
             comment_all.append(comment)
@@ -115,24 +136,47 @@ def listing(request,item_id):
             pass
 
     len_of_comments=len(comment_all)
-    print(len_of_comments)
-    if request.method !='POST':
-        #No data submitted; create a blank form.
-        form= BidForm()
-        comment= CommentForm()
-    
-    elif request.method=='POST' and 'bid' in request.POST:        #Post data submitted; process data.
-        form=BidForm(data=request.POST)
-        if form.is_valid():
-            new_bid=form.save(commit=False)
-            new_bid.bidder=request.user
-            new_bid.bidding=Listings(listing.id)
-            new_bid.save()
-            return redirect('index')
+
+
+
+
+
+
+    if request.method=='POST' and 'bid' in request.POST:
+        if flag:
+            if float(request.POST['bidstart']) < biditems[bidlen].bidstart:
+                  raise forms.ValidationError("bid is less than previous bids")
+            else:
+                pass
+
+   
+   
 
     if request.method !='POST':
-        #No data submitted; create a blank form.
         form= BidForm()
+    elif request.method=='POST' and 'bid' in request.POST: 
+                
+                if float(request.POST['bidstart']) < listing.listing_price or float(request.POST['bidstart']) == listing.listing_price:
+                    raise KeyError("Bid should be more than starting price")
+
+                else:
+    
+                            form=BidForm(request.POST)
+                            form.is_valid()
+                            new_bid=form.save(commit=False)
+                            new_bid.bidder=request.user
+                            new_bid.bidding=Listings(listing.id)
+                            new_bid.save()
+                            return redirect('index')
+            
+                  
+
+        
+        
+          
+
+
+    if request.method !='POST':
         comment= CommentForm()
     
     elif request.method=='POST' and 'comment' in request.POST:        #Post data submitted; process data.
@@ -178,9 +222,12 @@ def listing(request,item_id):
     BidItems=Bid.objects.all()
     biditems=[]
     for bidone in BidItems:
-        if request.user==bidone.bidder:
-            bid_item=bidone.bidding
+        if  str(bidone.bidding)==listing.listing_title:
+            bid_item=bidone
             biditems.append(bid_item)
+
+  
+   
 
     
 
@@ -190,7 +237,8 @@ def listing(request,item_id):
 
 
     context={'listing':listing,'no_of_bids':i,'j':j,"comments":comment_all,'len':len_of_comments,
-    'form':form,'commentForm':comment,'watchlistform':watchlistform,'key':key}
+    'form':form,'commentForm':comment,'watchlistform':watchlistform,
+    'key':key,'highestbid':HighestBidMade,'flag':flag}
     return render(request,"auctions/listing.html",context)
 
 
@@ -252,3 +300,7 @@ def watchlist(request):
 
     
     return render(request,'auctions/watchlist.html',context)
+
+
+def ListingItemIdRetriever(item_id):
+    return item_id

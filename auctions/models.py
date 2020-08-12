@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
+
+
 from django.conf import settings
 
 
@@ -37,10 +39,13 @@ class Listings(models.Model):
         return url
 
 
+
+
+
 class Bid(models.Model):
     bidder=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     bidding=models.ForeignKey(Listings,on_delete=models.CASCADE, null=True)
-    bid_price=models.DecimalField(max_digits=5,decimal_places=2)
+    bidstart=models.DecimalField(max_digits=5,decimal_places=2)
     
 
     def __str__(self):
