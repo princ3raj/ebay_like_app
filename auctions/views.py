@@ -154,7 +154,7 @@ def listing(request,item_id):
     if request.method=='POST' and 'bid' in request.POST:
         if flag:
             if float(request.POST['bidstart']) < biditems[bidlen].bidstart:
-                  raise forms.ValidationError("bid is less than previous bids")
+                  return render(request,"auctions/lessthanpreviousbids.html")
             else:
                 pass
 
@@ -166,7 +166,7 @@ def listing(request,item_id):
     elif request.method=='POST' and 'bid' in request.POST: 
                 
                 if float(request.POST['bidstart']) < listing.listing_price or float(request.POST['bidstart']) == listing.listing_price:
-                    raise KeyError("Bid should be more than starting price")
+                    return render(request,"auctions/startbiderror.html")
 
                 else:
     
@@ -354,5 +354,8 @@ def removewatchlist(request, item_id):
     # print(type(str(request.user)))
     # watchlist.delete()
     return redirect('index')
+
+
+
 
 
