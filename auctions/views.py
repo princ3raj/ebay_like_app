@@ -133,6 +133,7 @@ def listing(request,item_id):
 
     
     print(HighestBidder)
+    print(listing.id)
 
     comments=Comments.objects.all()
     comment_all=[]
@@ -328,12 +329,30 @@ def delete(request,item_id,highest_bidder):
     return render(request,"auctions/delete.html",context)
 
 
-# TODO
-@login_required
+
 def removewatchlist(request, item_id):
-    watchlist=WatchList.objects.get(item_id)
-    print(watchlist)
-    watchlist.delete()
+    watchlist=WatchList.objects.all()
+
+    #deriving the name of the product that's clicked out as to remove itself
+    listing=Listings.objects.get(pk=item_id)
+
+    #logic is first i am checking that the user is deleting its own item not
+    #others, then i am matching the watchlist item name with the listing item_id that
+    #represents a product itself
+    for watchlistitem in watchlist:
+        if str(watchlistitem.watchlist_owner)==str(request.user):
+            if str(watchlistitem.watchlist_listing)==str(listing):
+                   watchlistitem.delete()
+
+    # print(listing)
+    # print(type(str(item_id)))
+    # print(type(str(watchlist[0].watchlist_listing)))
+    # print(type(str(watchlist[0].watchlist_owner)))
+    # print(watchlist[0].id)
+    # print(watchlist[1].id)
+    # print(watchlist[2].id)
+    # print(type(str(request.user)))
+    # watchlist.delete()
     return redirect('index')
 
 
