@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %} {% load static %} {% load bootstrap4 %} {% block body %}
+<h1>Close Auction</h1>
+
+<br>
+<br>
+<br>
+
+
+<form action="{% url 'delete' item_id highest_bidder %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">Are you sure, then click on close or go back</button>
+    {% endbuttons %}
+    {% buttons %}
+        <button type="submit" class="btn btn-secondary">Close Auction</button>
+    {% endbuttons %}
+    <br>
+    <br>
+</form>
+
+{% endblock %}

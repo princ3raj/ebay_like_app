@@ -5,16 +5,24 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-
-
 from .forms import *
-
-from .models import User, Listings, Bid, Comments
+from .models import User, Listings, Bid, Comments,WinnerList
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
+    loggedinuser=str(request.user)
     listings=Listings.objects.all()
-    context={'listings':listings}
+    winnerslist=WinnerList.objects.all()
+    winners=[]
+    for winner in winnerslist:
+        winners.append(winner.winnername)
+
+    
+   
+
+
+    context={'listings':listings,'winners':winners,'loggedinuser':loggedinuser}
     return render(request, "auctions/index.html",context)
 
 
@@ -37,7 +45,7 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
+@login_required
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
@@ -71,7 +79,7 @@ def register(request):
 
 
 
-
+@login_required
 def categories(request):
     listings=Listings.objects.all()
     list_item=[]
@@ -85,7 +93,7 @@ def categories(request):
     return render(request,"auctions/categories.html", context)
 
 
-
+@login_required
 def listing(request,item_id):
     listing=Listings.objects.get(pk=item_id) 
     watchlistform=WatchListForm()   
@@ -101,9 +109,7 @@ def listing(request,item_id):
     else:
         j=0
 
-    print(listing.listing_title)
-    # #calling function to pass value
-    # ListingItemIdRetriever(item_id)
+    
 
     BidItems=Bid.objects.all()
     biditems=[]
@@ -116,15 +122,17 @@ def listing(request,item_id):
     bidlen=len(biditems)-1
     if bidlen ==-1:
         HighestBidMade=0
+        HighestBidder=None
         flag=False
     else:
         HighestBidMade=biditems[bidlen].bidstart
+        HighestBidder=biditems[bidlen].bidder
         flag=True
 
    
 
     
-   
+    print(HighestBidder)
 
     comments=Comments.objects.all()
     comment_all=[]
@@ -168,14 +176,10 @@ def listing(request,item_id):
                             new_bid.bidding=Listings(listing.id)
                             new_bid.save()
                             return redirect('index')
+
+   
             
-                  
-
-        
-        
-          
-
-
+                
     if request.method !='POST':
         comment= CommentForm()
     
@@ -238,11 +242,11 @@ def listing(request,item_id):
 
     context={'listing':listing,'no_of_bids':i,'j':j,"comments":comment_all,'len':len_of_comments,
     'form':form,'commentForm':comment,'watchlistform':watchlistform,
-    'key':key,'highestbid':HighestBidMade,'flag':flag}
+    'key':key,'highestbid':HighestBidMade,'flag':flag,'highestbidder':HighestBidder}
     return render(request,"auctions/listing.html",context)
 
 
-
+@login_required
 def category_items(request, category):
         listings=Listings.objects.all()
 
@@ -260,7 +264,7 @@ def category_items(request, category):
         return render(request, "auctions/category_items.html", context)
 
 
-
+@login_required
 def create_listing(request):
     if request.method !='POST':
         #No data submitted; create a blank form.
@@ -281,7 +285,7 @@ def create_listing(request):
     return render(request,"auctions/create_listing.html",context)
 
 
-
+@login_required
 def watchlist(request):
 
     watchlistform=WatchListForm()
@@ -301,6 +305,35 @@ def watchlist(request):
     
     return render(request,'auctions/watchlist.html',context)
 
+@login_required
+def delete(request,item_id,highest_bidder):
+    listing=Listings.objects.get(pk=item_id)
+    winner=highest_bidder
 
-def ListingItemIdRetriever(item_id):
-    return item_id
+    if request.method !='POST':
+
+        form= WinnerForm()
+    
+    else: 
+        form=WinnerForm(data=request.POST)
+        if form.is_valid():
+            listing=Listings.objects.get(pk=item_id)
+            new_winner=form.save(commit=False)
+            new_winner.winnername=winner
+            # new_winner.winnerreference=listing
+            new_winner.save()
+            listing.delete()
+            return redirect('index')
+    context={'form':form,'item_id':item_id,'highest_bidder':highest_bidder}
+    return render(request,"auctions/delete.html",context)
+
+
+# TODO
+@login_required
+def removewatchlist(request, item_id):
+    watchlist=WatchList.objects.get(item_id)
+    print(watchlist)
+    watchlist.delete()
+    return redirect('index')
+
+

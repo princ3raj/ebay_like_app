@@ -1,6 +1,6 @@
 from django import forms  
 
-from .models import Listings,Bid, WatchList, Comments
+from .models import Listings,Bid, WatchList, Comments, WinnerList
 
 
 
@@ -43,6 +43,14 @@ class WatchListForm(forms.ModelForm):
         model=WatchList
         fields=['watchlist_listing','watchlist_owner']
         exclude=['watchlist_listing','watchlist_owner']
+
+
+class WinnerForm(forms.ModelForm):
+
+    class Meta:
+        model=WinnerList
+        fields=['winnername']
+        exclude=['winnername']
 
 
 # #Bidding Value cheking

@@ -12,15 +12,15 @@
 
 <h2 style="text-align: center;">Listing: {{listing.listing_title}}</h2>
 {% if key == 1 %}
-<form action="{% url 'listing' listing.id %}" method="post" class="form">
-    {% csrf_token %}
-    {% bootstrap_form watchlistform %}
+
+   
+    
     {% buttons %}
-        <button name="watchlistbutton" type="submit" class="btn btn-secondary">Remove</button>
+        <a href="{% url 'remove' listing.id %}"><button name="watchlistbutton" type="submit" class="btn btn-secondary">Remove</button></a>
     {% endbuttons %}
     <br>
     <br>
-</form>
+
 {% else %}
 <form action="{% url 'listing' listing.id %}" method="post" class="form">
     {% csrf_token %}
@@ -58,7 +58,7 @@
 
 <p>{{no_of_bids}} bids made so far</p>
 {% if flag == True %}
-  <p>{{highestbid}} is the highest bid until now!</p>
+  <p>${{highestbid}} is the highest bid until now!</p>
 {% else %}
  
 {% endif %}
@@ -107,7 +107,12 @@
 
 {% if j %}
 
-   <p>Delete</p>
+   
+    
+    {% buttons %}
+        <a href="{% url 'delete' listing.id highestbidder %}"><button name="delete" type="submit" class="btn btn-dark">Close Listing</button></a>
+    {% endbuttons %}
+
 
 {% endif %}
 

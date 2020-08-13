@@ -1,23 +1,45 @@
 {% extends "auctions/layout.html" %} {% load static %} {% block body %}
-<h2>Active Listings</h2>
-
-{% for listing in listings %}
 
 
-<hr>
 
-<a href="{% url 'listing' listing.id%}">
-    <h2 style="text-align: center;">{{listing.listing_title}}</h2>
-</a>
 
-</li>
-<img style="display: flex; width=300px; height:300px;" src="{{listing.imageURL}}" alt="My image">
-<strong style="text-align: center;"><p>Price: ${{listing.listing_price}}</p><strong>
-<p style="text-align:center;">created at :{{listing.created_at}}</p>
-<hr>
-<br>
 
-     
-  
-{% endfor %}
+
+{%if request.user.is_authenticated%}
+    <h2>Active Listings</h2>
+    {% for winner in winners %}
+
+    {% if winner == loggedinuser %}
+        <h2>{{winner}} is the winner</h2>
+    {% else %}
+
+    
+    {% endif %}
+
+    {% endfor %}
+
+    {% for listing in listings %}
+
+
+    <hr>
+
+    <a href="{% url 'listing' listing.id%}">
+        <h2 style="text-align: center;">{{listing.listing_title}}</h2>
+    </a>
+
+    </li>
+    <img style="display: flex; width=300px; height:300px;" src="{{listing.imageURL}}" alt="My image">
+    <strong style="text-align: center;"><p>Price: ${{listing.listing_price}}</p><strong>
+    <p style="text-align:center;">created at :{{listing.created_at}}</p>
+    <hr>
+    <br>
+
+        
+    
+    {% endfor %}
+{% else %}
+
+    <h1>Log In Required</h1>
+
+{% endif %}
 {% endblock %}

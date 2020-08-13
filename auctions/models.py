@@ -66,5 +66,12 @@ class WatchList(models.Model):
     watchlist_owner=models.ForeignKey(User,on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.watchlist_listing)
+        return str(self.watchlist_listing.id)
     
+
+class WinnerList(models.Model):
+    winnername=models.CharField(max_length=200)
+   
+
+    def __str__(self):
+        return self.winnername
